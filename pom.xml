@@ -15,7 +15,25 @@
         <version>1.5.4.RELEASE</version>
 	</parent>
 
-	<properties>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.3</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.3.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/nicholasda/ld.mybatis</url>
+        <connection>https://github.com/nicholasda/ld.mybatis.git</connection>
+    </scm>
+    <developers>
+        <developer>
+            <name>dear_nicholasda</name>
+            <email>dear_nicholasda@163.com</email>
+        </developer>
+    </developers>
+
+    <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
@@ -120,12 +138,12 @@
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>a</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
                 <repository>
-                    <id>b</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
                 </repository>
             </distributionManagement>
          </profile>

@@ -457,7 +457,6 @@ public abstract class BaseExample implements IExample {
      * 增加左连接条件
      *
      * @param leftJoinOn 左连接条件
-     * @return 返回BaseExample对象
      */
     public void addLeftJoinOns(String leftJoinOn) {
         if (this.leftJoinOns == null) {
