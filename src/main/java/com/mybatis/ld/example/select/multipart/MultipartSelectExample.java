@@ -13,8 +13,6 @@ public class MultipartSelectExample extends SelectBaseExample {
     //判断是否使用leftJoin功能
     private boolean leftJoinFlag = false;
 
-    private String leftJoinOn;
-
     /**
      * 构造方法 带别名
      *
@@ -101,13 +99,5 @@ public class MultipartSelectExample extends SelectBaseExample {
 
     public void setLeftJoinFlag(boolean leftJoinFlag) {
         this.leftJoinFlag = leftJoinFlag;
-    }
-
-    public String getLeftJoinOn() {
-        return leftJoinOn;
-    }
-
-    public void setLeftJoinOn(String leftJoinOn) {
-        this.leftJoinOn = leftJoinOn;
     }
 }
