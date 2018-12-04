@@ -56,6 +56,8 @@ public abstract class BaseExample implements IExample {
     private List<String> likeValues;
     private List<String> notLikeFields;
     private List<String> notLikeValues;
+    private List<String> isNullFields;
+    private List<String> isNotNullFields;
 
     @Override
     public void end() throws ExampleException {
@@ -299,6 +301,36 @@ public abstract class BaseExample implements IExample {
 
 
     /**
+     * 添加is null查询所需的字段和包含值
+     * 类似：  field is null
+     *
+     * @param field        字段名
+     * @return 返回BaseExample对象
+     */
+    public BaseExample isNull(String field) {
+        if (this.isNullFields == null || this.isNullFields.size() == 0) {
+            this.isNullFields = new ArrayList<>();
+        }
+        this.isNullFields.add(field);
+        return this;
+    }
+
+    /**
+     * 添加is not null查询所需的字段和包含值
+     * 类似：  field is not null
+     *
+     * @param field     字段名
+     * @return 返回BaseExample对象
+     */
+    public BaseExample isNotNull(String field) {
+        if (this.isNotNullFields == null || this.isNotNullFields.size() == 0) {
+            this.isNotNullFields = new ArrayList<>();
+        }
+        this.isNotNullFields.add(field);
+        return this;
+    }
+
+    /**
      * 添加notLike查询所需的字段和包含值
      * 类似：  field  not like  "%notLikeValue%"
      *
@@ -317,7 +349,6 @@ public abstract class BaseExample implements IExample {
         this.notLikeValues.add(notLikeValue);
         return this;
     }
-
 
     /**
      * 相等的where条件
@@ -571,6 +602,22 @@ public abstract class BaseExample implements IExample {
 
     public List<String> getNotLikeValues() {
         return notLikeValues;
+    }
+
+    public List<String> getIsNullFields() {
+        return isNullFields;
+    }
+
+    public void setIsNullFields(List<String> isNullFields) {
+        this.isNullFields = isNullFields;
+    }
+
+    public List<String> getIsNotNullFields() {
+        return isNotNullFields;
+    }
+
+    public void setIsNotNullFields(List<String> isNotNullFields) {
+        this.isNotNullFields = isNotNullFields;
     }
 
     public void setUseMultipart(boolean useMultipart) {

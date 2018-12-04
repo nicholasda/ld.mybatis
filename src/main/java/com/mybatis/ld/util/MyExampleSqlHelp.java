@@ -243,6 +243,32 @@ public class MyExampleSqlHelp {
 	}
 
 	/**
+	 * 是否使用is null查询
+	 *
+	 * @return
+	 */
+	public static String useIsNull() {
+		return "<if test=\" @com.mybatis.ld.util.ExampleOGNL@useIsNull(_parameter)\">\r\n" +
+				"			<foreach collection=\"isNullFields\" item=\"field\" index=\"index\" separator=\"\">\r\n" +
+				"				AND ${field} is null\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
+	 * 是否使用is not null查询
+	 *
+	 * @return
+	 */
+	public static String useIsNotNull() {
+		return "<if test=\" @com.mybatis.ld.util.ExampleOGNL@useIsNotNull(_parameter)\">\r\n" +
+				"			<foreach collection=\"isNotNullFields\" item=\"field\" index=\"index\" separator=\"\">\r\n" +
+				"				AND ${field} is not null\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
 	 * 是否使用group by
 	 *
 	 * @return 对应sql片段

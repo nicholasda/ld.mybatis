@@ -307,6 +307,39 @@ public class ExampleOGNL {
 		return false;
 	}
 
+	/**
+	 * 使用了is null查询
+	 *
+	 * @param parameter 传入对象(BaseExample的子类)
+	 * @return boolean
+	 */
+	public static boolean useIsNull(Object parameter) {
+		if (parameter != null) {
+			BaseExample sbe = (BaseExample) parameter;
+			List<String> isNullFields = sbe.getIsNullFields();
+			if (isNullFields != null && isNullFields.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 使用了is not null查询
+	 *
+	 * @param parameter 传入对象(BaseExample的子类)
+	 * @return boolean
+	 */
+	public static boolean useIsNotNull(Object parameter) {
+		if (parameter != null) {
+			BaseExample sbe = (BaseExample) parameter;
+			List<String> isNotNullFields = sbe.getIsNotNullFields();
+			if (isNotNullFields != null && isNotNullFields.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 是否使用了分组

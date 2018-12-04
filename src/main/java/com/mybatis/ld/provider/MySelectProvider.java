@@ -32,6 +32,8 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useNotIn());
         sql.append(MyExampleSqlHelp.useLike());
         sql.append(MyExampleSqlHelp.useNotLike());
+        sql.append(MyExampleSqlHelp.useIsNull());
+        sql.append(MyExampleSqlHelp.useIsNotNull());
         sql.append(MyExampleSqlHelp.useEndWhereLabel());
         sql.append(MyExampleSqlHelp.useGroup());
         sql.append(MyExampleSqlHelp.useOrder());
@@ -57,6 +59,8 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useNotIn());
         sql.append(MyExampleSqlHelp.useLike());
         sql.append(MyExampleSqlHelp.useNotLike());
+        sql.append(MyExampleSqlHelp.useIsNull());
+        sql.append(MyExampleSqlHelp.useIsNotNull());
         sql.append(MyExampleSqlHelp.useEndWhereLabel());
         sql.append(MyExampleSqlHelp.useGroup());
         sql.append(MyExampleSqlHelp.useOrder());
