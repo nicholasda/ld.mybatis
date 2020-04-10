@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.mybatis.ld.example.BaseExample;
 import com.mybatis.ld.exception.ExampleException;
 
-public class SelectBaseExample extends BaseExample {
+public class SelectBaseExample<T extends SelectBaseExample<?>> extends BaseExample<T> {
+
     Logger log = LoggerFactory.getLogger(SelectBaseExample.class);
     private Map<String, Object> order;
     private String groupBy;
@@ -39,6 +40,60 @@ public class SelectBaseExample extends BaseExample {
     }
 
     /**
+     * 添加返回结果的字段 类似于(select field,field,field )
+     *
+     * @param field 要添加的字段
+     * @return T对象
+     */
+    public T addField(String field) {
+        if (this.fields == null) {
+            this.fields = new ArrayList<>();
+        }
+        this.fields.add(field);
+        return getThis();
+    }
+
+    /**
+     * 添加返回结果的字段 类似于(select field,field,field )
+     *
+     * @param fields 要添加的字段list集合
+     * @return T对象
+     */
+    public T addField(List fields) {
+        if (this.fields == null) {
+            this.fields = new ArrayList<>();
+        }
+        this.fields.addAll(fields);
+        return getThis();
+    }
+
+    /**
+     * 对SQL语句添加排序
+     *
+     * @param field 要排序的字段名
+     * @param orderType 使用ExampleConstants这个常量类
+     * @return T对象
+     */
+    public T orderBy(String field, String orderType) {
+        if (this.order == null) {
+            this.order = new HashMap<>();
+        }
+        this.order.put(field, orderType);
+        return getThis();
+    }
+
+    /**
+     * 对SQL语句添加分组
+     *
+     * @param field 要分组的字段名
+     * @return T 对象
+     */
+    public T groupBy(String field) {
+        this.groupBy = field;
+        return getThis();
+    }
+
+    /**
      * 表示查询语句结束，进行检查的方法
      *
      * @throws ExampleException 异常
@@ -53,81 +108,6 @@ public class SelectBaseExample extends BaseExample {
             fields.add("*");
         }
     }
-
-    /**
-     * 添加返回结果的字段   类似于(select field,field,field )
-     *
-     * @param field 要添加的字段
-     * @return SelectBaseExample对象
-     */
-    public SelectBaseExample addField(String field) {
-        if (this.fields == null) {
-            this.fields = new ArrayList<>();
-        }
-        this.fields.add(field);
-        return this;
-    }
-
-    /**
-     * 添加返回结果的字段   类似于(select field,field,field )
-     *
-     * @param fields 要添加的字段list集合
-     * @return SelectBaseExample对象
-     */
-    public SelectBaseExample addField(List fields) {
-        if (this.fields == null) {
-            this.fields = new ArrayList<>();
-        }
-        this.fields.addAll(fields);
-        return this;
-    }
-
-
-    /**
-     * 对SQL语句添加排序
-     *
-     * @param field     要排序的字段名
-     * @param orderType 使用ExampleConstants这个常量类
-     * @return SelectBaseExample对象
-     */
-    public SelectBaseExample orderBy(String field, String orderType) {
-        if (this.order == null) {
-            this.order = new HashMap<>();
-        }
-        this.order.put(field, orderType);
-        return this;
-    }
-
-    /**
-     * 对SQL语句添加分组
-     *
-     * @param field 要分组的字段名
-     * @return SelectBaseExample 对象
-     */
-    public SelectBaseExample groupBy(String field) {
-        this.groupBy = field;
-        return this;
-    }
-
-    /**
-     * 使用left join功能
-     *
-     * @param table 表名
-     */
-    public void leftJoin(String table) {
-
-    }
-
-    /**
-     * 使用left join功能
-     *
-     * @param table 表名
-     * @param alias 别名
-     */
-    public void leftJoin(String table, String alias) {
-
-    }
-
 
     public Map<String, Object> getOrder() {
         return order;
@@ -155,11 +135,6 @@ public class SelectBaseExample extends BaseExample {
 
     @Override
     public String toString() {
-        return "SelectExample{" +
-                ", orderBy=" + order +
-                ", groupBy=" + groupBy +
-                ", fields=" + fields +
-                '}';
+        return "SelectExample{" + ", orderBy=" + order + ", groupBy=" + groupBy + ", fields=" + fields + '}';
     }
 }
-

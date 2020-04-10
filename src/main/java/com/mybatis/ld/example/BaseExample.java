@@ -1,21 +1,17 @@
 package com.mybatis.ld.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.mybatis.ld.exception.ExampleException;
 import com.mybatis.ld.exception.example.InFiledException;
 import com.mybatis.ld.exception.example.LikeFiledException;
 import com.mybatis.ld.exception.example.NoTableNameException;
 
-
-public abstract class BaseExample implements IExample {
+public abstract class BaseExample<T extends BaseExample<?>> implements IExample {
     Logger log = LoggerFactory.getLogger(BaseExample.class);
 
     private boolean useMultipart;
@@ -39,12 +35,28 @@ public abstract class BaseExample implements IExample {
     private List<Object> notEqualsWhereValue;
     //表名集合
     private List<String> tableName;
+    //内连接表名集合
+    private List<String> innerTableName;
+    //右连接表名集合
+    private List<String> rightTableName;
     //表名与别名的映射。key为别名，value是表名
     private Map<String, String> tableMap;
+    //内连接表名与别名的映射。key为别名，value是表名
+    private Map<String, String> innerTableMap;
+    //右连接表名与别名的映射。key为别名，value是表名
+    private Map<String, String> rightTableMap;
     //别名集合
     private List<String> tableAlias;
+    //内连接别名集合
+    private List<String> innerTableAlias;
+    //右连接别名集合
+    private List<String> rightTableAlias;
     //左连接条件集合
     private List<String> leftJoinOns;
+    //内连接条件集合
+    private List<String> innerJoinOns;
+    //右连接条件集合
+    private List<String> rightJoinOns;
 
     private List<String> inFields;
     private List<Object> inValue1;
@@ -61,7 +73,6 @@ public abstract class BaseExample implements IExample {
 
     @Override
     public void end() throws ExampleException {
-
         //如果表名为空直接抛出异常
         if (tableName == null || tableName.size() == 0) {
             throw new NoTableNameException("使用SelectBaseExample时表名不能为空！");
@@ -95,6 +106,18 @@ public abstract class BaseExample implements IExample {
         if (tableAlias != null) {
             if (tableAlias.size() != tableName.size()) {
                 throw new IllegalArgumentException("使用别名时，别名数量与表名不一致，请检查！");
+            }
+        }
+        //判断内连接别名映射的数量是否与表名集合数量一致
+        if (innerTableAlias != null) {
+            if (innerTableAlias.size() != innerTableName.size()) {
+                throw new IllegalArgumentException("使用内连接时，别名数量与表名不一致，请检查！");
+            }
+        }
+        //判断右连接别名映射的数量是否与表名集合数量一致
+        if (rightTableAlias != null) {
+            if (rightTableAlias.size() != rightTableName.size()) {
+                throw new IllegalArgumentException("使用右连接时，别名数量与表名不一致，请检查！");
             }
         }
         if (inFields == null && likeFields == null) {
@@ -147,14 +170,17 @@ public abstract class BaseExample implements IExample {
         }
     }
 
+    public T getThis() {
+        return (T)this;
+    }
 
     /**
      * 链式操作添加in()查新的包含值 调用此方法前应先调用过addInField方法
      *
      * @param inValue 要查找的数值
-     * @return this对象
+     * @return getThis()对象
      */
-    public BaseExample in(String inValue) {
+    public T in(String inValue) {
         if (inFields == null) {
             throw new InFiledException("在执行in()方法前请先执行addInField()方法增加要查询的字段。");
         }
@@ -170,16 +196,16 @@ public abstract class BaseExample implements IExample {
             }
             this.inValue2.add(inValue);
         }
-        return this;
+        return getThis();
     }
 
     /**
      * 链式操作添加in()查新的包含值 调用此方法前应先调用过addInField方法
      *
      * @param inValue 要查找的数值的list集合
-     * @return this对象
+     * @return getThis()对象
      */
-    public BaseExample in(List<String> inValue) {
+    public T in(List<String> inValue) {
         if (inFields == null) {
             throw new InFiledException("在执行in()方法前请先执行addInField()方法增加要查询的字段。");
         }
@@ -195,17 +221,16 @@ public abstract class BaseExample implements IExample {
             }
             this.inValue2.addAll(inValue);
         }
-        return this;
+        return getThis();
     }
-
 
     /**
      * 链式操作添加in()查新的包含值 调用此方法前应先调用过addInField方法
      *
      * @param notInValue 要查找的数值
-     * @return this对象
+     * @return getThis()对象
      */
-    public BaseExample notIn(String notInValue) {
+    public T notIn(String notInValue) {
         if (notInFields == null) {
             throw new InFiledException("在执行in()方法前请先执行addNotInField()方法增加要查询的字段。");
         }
@@ -221,17 +246,16 @@ public abstract class BaseExample implements IExample {
             }
             this.notInValue2.add(notInValue);
         }
-        return this;
+        return getThis();
     }
-
 
     /**
      * 链式操作添加not in()查新的包含值 调用此方法前应先调用过addNotInField()方法
      *
      * @param inValue 要查找的数值的list集合
-     * @return this对象
+     * @return getThis()对象
      */
-    public BaseExample notIn(List<String> inValue) {
+    public T notIn(List<String> inValue) {
         if (notInFields == null) {
             throw new InFiledException("在执行in()方法前请先执行addNotInField()方法增加要查询的字段。");
         }
@@ -247,47 +271,45 @@ public abstract class BaseExample implements IExample {
             }
             this.notInValue2.addAll(inValue);
         }
-        return this;
+        return getThis();
     }
 
-
     /**
-     * 添加in查询所需字段方法 类似 infield  in （value1,value2,value3...）
+     * 添加in查询所需字段方法 类似 infield in （value1,value2,value3...）
      *
      * @param infield 字段名
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample addInField(String infield) {
+    public T addInField(String infield) {
         if (this.inFields == null || this.inFields.size() == 0) {
             this.inFields = new ArrayList<>();
         }
         this.inFields.add(infield);
-        return this;
+        return getThis();
     }
 
     /**
-     * 添加in查询所需字段方法 类似 notInfield  in （value1,value2,value3...）
+     * 添加in查询所需字段方法 类似 notInfield in （value1,value2,value3...）
      *
      * @param notInfield 字段名
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample addNotInField(String notInfield) {
+    public T addNotInField(String notInfield) {
         if (this.notInFields == null || this.notInFields.size() == 0) {
             this.notInFields = new ArrayList<>();
         }
         this.notInFields.add(notInfield);
-        return this;
+        return getThis();
     }
 
     /**
-     * 添加like查询所需的字段和包含值
-     * 类似：  field  like  "%likeValue%"
+     * 添加like查询所需的字段和包含值 类似： field like "%likeValue%"
      *
-     * @param field     字段名
+     * @param field 字段名
      * @param likeValue 包含值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample like(String field, String likeValue) {
+    public T like(String field, String likeValue) {
         if (this.likeFields == null || this.likeFields.size() == 0) {
             this.likeFields = new ArrayList<>();
         }
@@ -296,49 +318,45 @@ public abstract class BaseExample implements IExample {
         }
         this.likeFields.add(field);
         this.likeValues.add(likeValue);
-        return this;
+        return getThis();
     }
 
-
     /**
-     * 添加is null查询所需的字段和包含值
-     * 类似：  field is null
+     * 添加is null查询所需的字段和包含值 类似： field is null
      *
-     * @param field        字段名
-     * @return 返回BaseExample对象
+     * @param field 字段名
+     * @return 返回T对象
      */
-    public BaseExample isNull(String field) {
+    public T isNull(String field) {
         if (this.isNullFields == null || this.isNullFields.size() == 0) {
             this.isNullFields = new ArrayList<>();
         }
         this.isNullFields.add(field);
-        return this;
+        return getThis();
     }
 
     /**
-     * 添加is not null查询所需的字段和包含值
-     * 类似：  field is not null
+     * 添加is not null查询所需的字段和包含值 类似： field is not null
      *
-     * @param field     字段名
-     * @return 返回BaseExample对象
+     * @param field 字段名
+     * @return 返回T对象
      */
-    public BaseExample isNotNull(String field) {
+    public T isNotNull(String field) {
         if (this.isNotNullFields == null || this.isNotNullFields.size() == 0) {
             this.isNotNullFields = new ArrayList<>();
         }
         this.isNotNullFields.add(field);
-        return this;
+        return getThis();
     }
 
     /**
-     * 添加notLike查询所需的字段和包含值
-     * 类似：  field  not like  "%notLikeValue%"
+     * 添加notLike查询所需的字段和包含值 类似： field not like "%notLikeValue%"
      *
-     * @param field        字段名
+     * @param field 字段名
      * @param notLikeValue 包含值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample notLike(String field, String notLikeValue) {
+    public T notLike(String field, String notLikeValue) {
         if (this.notLikeFields == null || this.notLikeFields.size() == 0) {
             this.notLikeFields = new ArrayList<>();
         }
@@ -347,7 +365,7 @@ public abstract class BaseExample implements IExample {
         }
         this.notLikeFields.add(field);
         this.notLikeValues.add(notLikeValue);
-        return this;
+        return getThis();
     }
 
     /**
@@ -355,16 +373,16 @@ public abstract class BaseExample implements IExample {
      *
      * @param field 字段名
      * @param value 值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample equalsWhere(String field, Object value) {
+    public T equalsWhere(String field, Object value) {
         if (this.equalsWhereKey == null) {
             equalsWhereKey = new LinkedList<>();
             equalsWhereValue = new LinkedList<>();
         }
         equalsWhereKey.add(field);
         equalsWhereValue.add(value);
-        return this;
+        return getThis();
     }
 
     /**
@@ -372,16 +390,16 @@ public abstract class BaseExample implements IExample {
      *
      * @param field 字段名
      * @param value 值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample greaterThanWhere(String field, Object value) {
+    public T greaterThanWhere(String field, Object value) {
         if (this.greaterThanWhereKey == null) {
             greaterThanWhereKey = new LinkedList<>();
             greaterThanWhereValue = new LinkedList<>();
         }
         greaterThanWhereKey.add(field);
         greaterThanWhereValue.add(value);
-        return this;
+        return getThis();
     }
 
     /**
@@ -389,16 +407,16 @@ public abstract class BaseExample implements IExample {
      *
      * @param field 字段名
      * @param value 值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample greaterThanOrEqualToWhere(String field, Object value) {
+    public T greaterThanOrEqualToWhere(String field, Object value) {
         if (this.greaterThanOrEqualToWhereKey == null) {
             greaterThanOrEqualToWhereKey = new LinkedList<>();
             greaterThanOrEqualToWhereValue = new LinkedList<>();
         }
         greaterThanOrEqualToWhereKey.add(field);
         greaterThanOrEqualToWhereValue.add(value);
-        return this;
+        return getThis();
     }
 
     /**
@@ -406,16 +424,16 @@ public abstract class BaseExample implements IExample {
      *
      * @param field 字段名
      * @param value 值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample lessThanOrEqualToWhere(String field, Object value) {
+    public T lessThanOrEqualToWhere(String field, Object value) {
         if (this.lessThanOrEqualToWhereKey == null) {
             lessThanOrEqualToWhereKey = new LinkedList<>();
             lessThanOrEqualToWhereValue = new LinkedList<>();
         }
         lessThanOrEqualToWhereKey.add(field);
         lessThanOrEqualToWhereValue.add(value);
-        return this;
+        return getThis();
     }
 
     /**
@@ -423,16 +441,16 @@ public abstract class BaseExample implements IExample {
      *
      * @param field 字段名
      * @param value 值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample lessThanWhere(String field, Object value) {
+    public T lessThanWhere(String field, Object value) {
         if (this.lessThanWhereKey == null) {
             lessThanWhereKey = new LinkedList<>();
             lessThanWhereValue = new LinkedList<>();
         }
         lessThanWhereKey.add(field);
         lessThanWhereValue.add(value);
-        return this;
+        return getThis();
     }
 
     /**
@@ -440,18 +458,17 @@ public abstract class BaseExample implements IExample {
      *
      * @param field 字段名
      * @param value 值
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample notEqualsWhere(String field, Object value) {
+    public T notEqualsWhere(String field, Object value) {
         if (this.notEqualsWhereKey == null) {
             notEqualsWhereKey = new LinkedList<>();
             notEqualsWhereValue = new LinkedList<>();
         }
         notEqualsWhereKey.add(field);
         notEqualsWhereValue.add(value);
-        return this;
+        return getThis();
     }
-
 
     /**
      * 增加表名
@@ -466,22 +483,84 @@ public abstract class BaseExample implements IExample {
     }
 
     /**
+     * 增加内连接表名
+     *
+     * @param tableName 表名
+     */
+    protected void addInnerTableName(String tableName) {
+        if (this.innerTableName == null) {
+            this.innerTableName = new ArrayList<>();
+        }
+        this.innerTableName.add(tableName);
+    }
+
+    /**
+     * 增加右连接表名
+     *
+     * @param tableName 表名
+     */
+    protected void addRightTableName(String tableName) {
+        if (this.rightTableName == null) {
+            this.rightTableName = new ArrayList<>();
+        }
+        this.rightTableName.add(tableName);
+    }
+
+    /**
      * 增加别名和表名的映射关系
      *
-     * @param alias     别名
+     * @param alias 别名
      * @param tableName 表名
-     * @return 返回BaseExample对象
+     * @return 返回T对象
      */
-    public BaseExample addAlias(String alias, String tableName) {
+    public T addAlias(String alias, String tableName) {
         if (this.tableAlias == null) {
             this.tableAlias = new ArrayList<>();
         }
         this.tableAlias.add(alias);
         if (this.tableMap == null) {
-            this.tableMap = new HashMap<String, String>();
+            this.tableMap = new HashMap<>();
         }
         this.tableMap.put(alias, tableName);
-        return this;
+        return getThis();
+    }
+
+    /**
+     * 增加内连接别名和表名的映射关系
+     *
+     * @param alias 别名
+     * @param tableName 表名
+     * @return 返回T对象
+     */
+    public T addInnerAlias(String alias, String tableName) {
+        if (this.innerTableAlias == null) {
+            this.innerTableAlias = new ArrayList<>();
+        }
+        this.innerTableAlias.add(alias);
+        if (this.innerTableMap == null) {
+            this.innerTableMap = new HashMap<>();
+        }
+        this.innerTableMap.put(alias, tableName);
+        return getThis();
+    }
+
+    /**
+     * 增加右连接别名和表名的映射关系
+     *
+     * @param alias 别名
+     * @param tableName 表名
+     * @return 返回T对象
+     */
+    public T addRightAlias(String alias, String tableName) {
+        if (this.rightTableAlias == null) {
+            this.rightTableAlias = new ArrayList<>();
+        }
+        this.rightTableAlias.add(alias);
+        if (this.rightTableMap == null) {
+            this.rightTableMap = new HashMap<>();
+        }
+        this.rightTableMap.put(alias, tableName);
+        return getThis();
     }
 
     /**
@@ -494,6 +573,30 @@ public abstract class BaseExample implements IExample {
             this.leftJoinOns = new ArrayList<>();
         }
         this.leftJoinOns.add(leftJoinOn);
+    }
+
+    /**
+     * 增加内连接条件
+     *
+     * @param innerJoinOn 内连接条件
+     */
+    public void addInnerJoinOns(String innerJoinOn) {
+        if (this.innerJoinOns == null) {
+            this.innerJoinOns = new ArrayList<>();
+        }
+        this.innerJoinOns.add(innerJoinOn);
+    }
+
+    /**
+     * 增加右连接条件
+     *
+     * @param innerJoinOn 内连接条件
+     */
+    public void addRightJoinOns(String innerJoinOn) {
+        if (this.rightJoinOns == null) {
+            this.rightJoinOns = new ArrayList<>();
+        }
+        this.rightJoinOns.add(innerJoinOn);
     }
 
     public List<String> getTableName() {
@@ -530,6 +633,10 @@ public abstract class BaseExample implements IExample {
 
     public boolean isUseMultipart() {
         return useMultipart;
+    }
+
+    public void setUseMultipart(boolean useMultipart) {
+        this.useMultipart = useMultipart;
     }
 
     public List<String> getEqualsWhereKey() {
@@ -570,6 +677,14 @@ public abstract class BaseExample implements IExample {
 
     public List<String> getLeftJoinOns() {
         return leftJoinOns;
+    }
+
+    public List<String> getInnerJoinOns() {
+        return innerJoinOns;
+    }
+
+    public void setInnerJoinOns(List<String> innerJoinOns) {
+        this.innerJoinOns = innerJoinOns;
     }
 
     public List<Object> getLessThanWhereValue() {
@@ -620,8 +735,59 @@ public abstract class BaseExample implements IExample {
         this.isNotNullFields = isNotNullFields;
     }
 
-    public void setUseMultipart(boolean useMultipart) {
-        this.useMultipart = useMultipart;
+    public List<String> getInnerTableAlias() {
+        return innerTableAlias;
     }
 
+    public void setInnerTableAlias(List<String> innerTableAlias) {
+        this.innerTableAlias = innerTableAlias;
+    }
+
+    public Map<String, String> getInnerTableMap() {
+        return innerTableMap;
+    }
+
+    public void setInnerTableMap(Map<String, String> innerTableMap) {
+        this.innerTableMap = innerTableMap;
+    }
+
+    public List<String> getInnerTableName() {
+        return innerTableName;
+    }
+
+    public void setInnerTableName(List<String> innerTableName) {
+        this.innerTableName = innerTableName;
+    }
+
+    public List<String> getRightTableName() {
+        return rightTableName;
+    }
+
+    public void setRightTableName(List<String> rightTableName) {
+        this.rightTableName = rightTableName;
+    }
+
+    public Map<String, String> getRightTableMap() {
+        return rightTableMap;
+    }
+
+    public void setRightTableMap(Map<String, String> rightTableMap) {
+        this.rightTableMap = rightTableMap;
+    }
+
+    public List<String> getRightTableAlias() {
+        return rightTableAlias;
+    }
+
+    public void setRightTableAlias(List<String> rightTableAlias) {
+        this.rightTableAlias = rightTableAlias;
+    }
+
+    public List<String> getRightJoinOns() {
+        return rightJoinOns;
+    }
+
+    public void setRightJoinOns(List<String> rightJoinOns) {
+        this.rightJoinOns = rightJoinOns;
+    }
 }

@@ -58,6 +58,36 @@ public class MyExampleSqlHelp {
 	}
 
 	/**
+	 * 是否使用了内连接查询
+	 * * @return 对应sql片段
+	 */
+	public static String isUseInnerJoin() {
+		return "<if test=\"@com.mybatis.ld.util.ExampleOGNL@useMultipartAndInnerJoin(_parameter)\">\r\n" +
+				"			<foreach collection=\"innerTableAlias\" item=\"key\" index=\"index\" separator=\"\">\r\n" +
+				"			        INNER JOIN\r\n" +
+				"					    ${innerTableName[index]} ${key}\r\n" +
+				"			        ON\r\n" +
+				"					    ${innerJoinOns[index]}\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
+	 * 是否使用了右连接查询
+	 * * @return 对应sql片段
+	 */
+	public static String isUseRightJoin() {
+		return "<if test=\"@com.mybatis.ld.util.ExampleOGNL@useMultipartAndRightJoin(_parameter)\">\r\n" +
+				"			<foreach collection=\"rightTableAlias\" item=\"key\" index=\"index\" separator=\"\">\r\n" +
+				"			        RIGHT JOIN\r\n" +
+				"					    ${rightTableName[index]} ${key}\r\n" +
+				"			        ON\r\n" +
+				"					    ${rightJoinOns[index]}\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
 	 * where标签开始
 	 *
 	 * @return

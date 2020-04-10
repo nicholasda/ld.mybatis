@@ -1,9 +1,7 @@
 package com.mybatis.ld.provider;
 
-import org.apache.ibatis.mapping.MappedStatement;
-
 import com.mybatis.ld.util.MyExampleSqlHelp;
-
+import org.apache.ibatis.mapping.MappedStatement;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 import tk.mybatis.mapper.mapperhelper.MapperTemplate;
 
@@ -20,7 +18,9 @@ public class MySelectProvider extends MapperTemplate {
         StringBuilder sql = new StringBuilder("SELECT ");
         sql.append(MyExampleSqlHelp.getColumn());
         sql.append(MyExampleSqlHelp.isUseAlias());
+        sql.append(MyExampleSqlHelp.isUseInnerJoin());
         sql.append(MyExampleSqlHelp.isUseLeftJoin());
+        sql.append(MyExampleSqlHelp.isUseRightJoin());
         sql.append(MyExampleSqlHelp.useStartWhereLabel());
         sql.append(MyExampleSqlHelp.useWhereAndEqualsWhere());
         sql.append(MyExampleSqlHelp.useGreaterThan());
@@ -40,7 +40,7 @@ public class MySelectProvider extends MapperTemplate {
         return sql.toString();
     }
 
-    public String selectByEntity(MappedStatement ms) {
+    public String selectEntity(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
@@ -66,4 +66,4 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useOrder());
         return sql.toString();
     }
-}  
+}
