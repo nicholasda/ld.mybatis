@@ -34,6 +34,8 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useNotLike());
         sql.append(MyExampleSqlHelp.useIsNull());
         sql.append(MyExampleSqlHelp.useIsNotNull());
+        sql.append(MyExampleSqlHelp.useExists());
+        sql.append(MyExampleSqlHelp.useNotExists());
         sql.append(MyExampleSqlHelp.useEndWhereLabel());
         sql.append(MyExampleSqlHelp.useGroup());
         sql.append(MyExampleSqlHelp.useOrder());
@@ -47,7 +49,9 @@ public class MySelectProvider extends MapperTemplate {
         StringBuilder sql = new StringBuilder("SELECT ");
         sql.append(MyExampleSqlHelp.getColumn());
         sql.append(MyExampleSqlHelp.isUseAlias());
+        sql.append(MyExampleSqlHelp.isUseInnerJoin());
         sql.append(MyExampleSqlHelp.isUseLeftJoin());
+        sql.append(MyExampleSqlHelp.isUseRightJoin());
         sql.append(MyExampleSqlHelp.useStartWhereLabel());
         sql.append(MyExampleSqlHelp.useWhereAndEqualsWhere());
         sql.append(MyExampleSqlHelp.useGreaterThan());
@@ -61,6 +65,8 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useNotLike());
         sql.append(MyExampleSqlHelp.useIsNull());
         sql.append(MyExampleSqlHelp.useIsNotNull());
+        sql.append(MyExampleSqlHelp.useExists());
+        sql.append(MyExampleSqlHelp.useNotExists());
         sql.append(MyExampleSqlHelp.useEndWhereLabel());
         sql.append(MyExampleSqlHelp.useGroup());
         sql.append(MyExampleSqlHelp.useOrder());

@@ -299,6 +299,32 @@ public class MyExampleSqlHelp {
 	}
 
 	/**
+	 * 是否使用EXISTS查询
+	 *
+	 * @return
+	 */
+	public static String useExists() {
+		return "<if test=\" @com.mybatis.ld.util.ExampleOGNL@useExists(_parameter)\">\r\n" +
+				"			<foreach collection=\"exists\" item=\"field\" index=\"index\" separator=\"\">\r\n" +
+				"				AND EXISTS ( ${field} )\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
+	 * 是否使用EXISTS查询
+	 *
+	 * @return
+	 */
+	public static String useNotExists() {
+		return "<if test=\" @com.mybatis.ld.util.ExampleOGNL@useNotExists(_parameter)\">\r\n" +
+				"			<foreach collection=\"notExists\" item=\"field\" index=\"index\" separator=\"\">\r\n" +
+				"				AND NOT EXISTS ( ${field} )\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
 	 * 是否使用group by
 	 *
 	 * @return 对应sql片段

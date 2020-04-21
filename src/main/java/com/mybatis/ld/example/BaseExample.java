@@ -58,6 +58,11 @@ public abstract class BaseExample<T extends BaseExample<?>> implements IExample 
     //右连接条件集合
     private List<String> rightJoinOns;
 
+    //exists条件存储
+    private List<String> exists;
+    //not exists条件存储
+    private List<String> notExists;
+
     private List<String> inFields;
     private List<Object> inValue1;
     private List<Object> inValue2;
@@ -365,6 +370,34 @@ public abstract class BaseExample<T extends BaseExample<?>> implements IExample 
         }
         this.notLikeFields.add(field);
         this.notLikeValues.add(notLikeValue);
+        return getThis();
+    }
+
+    /**
+     * EXISTS条件
+     *
+     * @param condition EXISTS条件
+     * @return 返回T对象
+     */
+    public T exists(String condition) {
+        if (this.exists == null) {
+            exists = new LinkedList<>();
+        }
+        exists.add(condition);
+        return getThis();
+    }
+
+    /**
+     * NOT EXISTS条件
+     *
+     * @param condition NOT EXISTS条件
+     * @return 返回T对象
+     */
+    public T notExists(String condition) {
+        if (this.notExists == null) {
+            notExists = new LinkedList<>();
+        }
+        notExists.add(condition);
         return getThis();
     }
 
@@ -789,5 +822,21 @@ public abstract class BaseExample<T extends BaseExample<?>> implements IExample 
 
     public void setRightJoinOns(List<String> rightJoinOns) {
         this.rightJoinOns = rightJoinOns;
+    }
+
+    public List<String> getExists() {
+        return exists;
+    }
+
+    public void setExists(List<String> exists) {
+        this.exists = exists;
+    }
+
+    public List<String> getNotExists() {
+        return notExists;
+    }
+
+    public void setNotExists(List<String> notExists) {
+        this.notExists = notExists;
     }
 }

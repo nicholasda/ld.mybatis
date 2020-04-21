@@ -167,6 +167,36 @@ public class ExampleOGNL {
 	}
 
 	/**
+	 * 是否使用了exists查询
+	 *
+	 * @param parameter 传入对象(BaseExample的子类)
+	 * @return boolean
+	 */
+	public static boolean useExists(Object parameter) {
+		if (parameter != null) {
+			BaseExample sbe = (BaseExample) parameter;
+			List<String> exists = sbe.getExists();
+			return exists != null && exists.size() > 0;
+		}
+		return false;
+	}
+
+	/**
+	 * 是否使用了not exists查询
+	 *
+	 * @param parameter 传入对象(BaseExample的子类)
+	 * @return boolean
+	 */
+	public static boolean useNotExists(Object parameter) {
+		if (parameter != null) {
+			BaseExample sbe = (BaseExample) parameter;
+			List<String> notExists = sbe.getNotExists();
+			return notExists != null && notExists.size() > 0;
+		}
+		return false;
+	}
+
+	/**
 	 * 是否使用了大于查询
 	 *
 	 * @param parameter 传入对象(BaseExample的子类)
