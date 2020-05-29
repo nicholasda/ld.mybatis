@@ -16,6 +16,12 @@ public class UpdateBaseExample<T extends UpdateBaseExample<?>> extends BaseExamp
         super.addTableName(tableName);
     }
 
+    public UpdateBaseExample(String tableName, String alias) {
+        super.setUseMultipart(false);
+        super.addTableName(tableName);
+        super.addAlias(alias, tableName);
+    }
+
     /**
      * @throws ExampleException 异常
      */

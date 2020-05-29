@@ -62,6 +62,8 @@ public abstract class BaseExample<T extends BaseExample<?>> implements IExample 
     private List<String> exists;
     //not exists条件存储
     private List<String> notExists;
+    //自定义condition条件存储
+    private List<String> condition;
 
     private List<String> inFields;
     private List<Object> inValue1;
@@ -838,5 +840,13 @@ public abstract class BaseExample<T extends BaseExample<?>> implements IExample 
 
     public void setNotExists(List<String> notExists) {
         this.notExists = notExists;
+    }
+
+    public List<String> getCondition() {
+        return condition;
+    }
+
+    public void setCondition(List<String> condition) {
+        this.condition = condition;
     }
 }

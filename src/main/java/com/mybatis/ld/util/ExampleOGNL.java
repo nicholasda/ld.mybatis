@@ -197,6 +197,21 @@ public class ExampleOGNL {
 	}
 
 	/**
+	 * 是否使用了condition查询
+	 *
+	 * @param parameter 传入对象(BaseExample的子类)
+	 * @return boolean
+	 */
+	public static boolean useCondition(Object parameter) {
+		if (parameter != null) {
+			BaseExample sbe = (BaseExample) parameter;
+			List<String> condition = sbe.getCondition();
+			return condition != null && condition.size() > 0;
+		}
+		return false;
+	}
+
+	/**
 	 * 是否使用了大于查询
 	 *
 	 * @param parameter 传入对象(BaseExample的子类)

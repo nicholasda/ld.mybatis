@@ -36,6 +36,7 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useIsNotNull());
         sql.append(MyExampleSqlHelp.useExists());
         sql.append(MyExampleSqlHelp.useNotExists());
+        sql.append(MyExampleSqlHelp.useCondition());
         sql.append(MyExampleSqlHelp.useEndWhereLabel());
         sql.append(MyExampleSqlHelp.useGroup());
         sql.append(MyExampleSqlHelp.useOrder());
@@ -67,6 +68,7 @@ public class MySelectProvider extends MapperTemplate {
         sql.append(MyExampleSqlHelp.useIsNotNull());
         sql.append(MyExampleSqlHelp.useExists());
         sql.append(MyExampleSqlHelp.useNotExists());
+        sql.append(MyExampleSqlHelp.useCondition());
         sql.append(MyExampleSqlHelp.useEndWhereLabel());
         sql.append(MyExampleSqlHelp.useGroup());
         sql.append(MyExampleSqlHelp.useOrder());

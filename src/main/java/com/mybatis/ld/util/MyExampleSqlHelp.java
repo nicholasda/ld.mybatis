@@ -325,6 +325,19 @@ public class MyExampleSqlHelp {
 	}
 
 	/**
+	 * 是否使用自定义condition查询
+	 *
+	 * @return
+	 */
+	public static String useCondition() {
+		return "<if test=\" @com.mybatis.ld.util.ExampleOGNL@useCondition(_parameter)\">\r\n" +
+				"			<foreach collection=\"condition\" item=\"field\" index=\"index\" separator=\"\">\r\n" +
+				"				AND ( ${field} )\r\n" +
+				"			</foreach>\r\n" +
+				"		</if>";
+	}
+
+	/**
 	 * 是否使用group by
 	 *
 	 * @return 对应sql片段
