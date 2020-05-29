@@ -506,6 +506,20 @@ public abstract class BaseExample<T extends BaseExample<?>> implements IExample 
     }
 
     /**
+     * 自定义where条件
+     *
+     * @param conditionStr 自定义条件
+     * @return 返回T对象
+     */
+    public T addCondition(String conditionStr) {
+        if (this.condition == null) {
+            condition = new LinkedList<>();
+        }
+        condition.add(conditionStr);
+        return getThis();
+    }
+
+    /**
      * 增加表名
      *
      * @param tableName 表名
